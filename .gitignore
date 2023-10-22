@@ -5,3 +5,4 @@
 #unignore what we want to track
 !*.java
 !.gitignore
+!README.md
