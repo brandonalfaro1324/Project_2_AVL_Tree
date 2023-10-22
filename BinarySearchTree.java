@@ -11,11 +11,10 @@ import java.io.FileNotFoundException;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Scanner;
+import javax.swing.RowFilter.Entry;
 
 // Adding my own imports
 import java.util.Stack;
-
-import javax.swing.RowFilter.Entry;
 
 
 // Understanding this Syntax
@@ -44,19 +43,35 @@ public class BinarySearchTree<T extends Comparable<? super T>> implements Iterab
     int size;
     Stack<Entry<T>> binary_stack;
 
-    ////////////////////////////////////////////////////////////////////////////////
     public BinarySearchTree() {
         root = null;
         size = 0;
         binary_stack = null;
     }
 
-    /** TO DO: Is x contained in tree?
-     */
+
+    ////////////////////////////////////////////////////////////////////////////////
+    // "contains()" function checks if element exist in tree 
     public boolean contains(T x) {
-        return false;
+
+        // Intilaize boolean var and set it false.
+        boolean contains_sucess = false;
+
+        // Intialize Entry and assign existing node
+        // from x, or null if node doe snot exist.
+        Entry<T> current_entry = set_find(x);
+
+        // If node is not null and its element matches x, return true 
+        if(current_entry != null && x.compareTo(current_entry.element) == 0){
+            contains_sucess =  true;
+        }
+    
+        // Reset stack and return results
+        binary_stack = null;
+        return contains_sucess;
     }
 
+    ////////////////////////////////////////
     // "add()" function adds elements
     public boolean add(T x) {
 
@@ -102,36 +117,85 @@ public class BinarySearchTree<T extends Comparable<? super T>> implements Iterab
         binary_stack = null;
         return add_success;
     }
-
-    ////////////////////////////////
-
     
-    // remove() function that removes elements
+    ////////////////////////////////////////
+    // "remove()" function that removes elements
     public T remove(T x){
-        return null;
+
+        // Intialize a current Entry null node
+        Entry<T> current_entry = null;
+
+        // If size more than 0, remove node
+        if (size != 0){
+
+            // Find in tree
+            current_entry = set_find(x);
+
+            // If "current_entry.element" matches 
+            // then with "x" remove that node
+            if(x.compareTo(current_entry.element) == 0){
+
+                // If node is the leaf, then simply use "splice()" to remove
+                if (current_entry.left == null || current_entry.right == null){
+                    splice(current_entry);
+                }
+
+                // If the node has a child, the computer the appropriate steps
+                else {
+
+                    // Push current node to stack
+                    binary_stack.add(current_entry);
+
+                    // Initialize "mininum_right" and find the the right most lowest element
+                    Entry<T> mininum_right = find(current_entry.right, x);
+
+                    // Once found, assign "current_entry.element" with
+                    // "mininum_right.element" and then use splice() on "mininum_right"
+                    current_entry.element = mininum_right.element;
+                    splice(mininum_right);
+
+                }
+                // Reduce count
+                --size;
+            }
+            // If the x does not match "current_entry.element", return null.
+            else {
+                x = null;
+            }
+        }
+        // If size is 0, return null.
+        else {
+            x = null;
+        }
+        // Reset stack and return x
+        binary_stack = null;
+        return x;
     }
+
 
 
     // Helper function for remove and add
-        
-
+    //----------------------------------------------
     private Entry<T> set_find(T x){
 
+        // Intialize a new Stack and push null
         binary_stack = new Stack<>();
         binary_stack.add(null);
+
+        // Use x to traverse trough tree and assign it to "return_node"
         Entry<T> return_node = find(root, x);
 
+        // Return result from tree
         return return_node;
     }
 
+    //----------------------------------------------
     // find() Function finds element if it exist or not.
     private Entry<T> find(Entry<T> root, T x){
 
-        // Create a null Entry, return back Entry in tree if found
-
+        // Create a null Entry and return back Entry in tree if found
         Entry<T> current_entry = root;
         boolean found_element = false;
-
 
         // If we root is null or root equals
         // to new element, return back the node.
@@ -180,10 +244,40 @@ public class BinarySearchTree<T extends Comparable<? super T>> implements Iterab
         // Return Node 
         return current_entry;
     }
-    // splice()
 
-    ////////////////////////////////
+    //----------------------------------------------
+    // "splice()" function removes node from tree
+    private void splice(Entry<T> current_entry){
 
+        // Get the parent from binary_stack and
+        // initialize "child_" to null 
+        Entry<T> parent_ = binary_stack.peek();
+        Entry<T> child_ = null;
+
+        // Depending of "current_entry.left", if null
+        // assign "current_entry.right" to "child_", if not
+        // "current_entry.left" to "child_"
+        if(current_entry.left == null){
+            child_ = current_entry.right;
+        }
+        else{
+            child_ = current_entry.left;
+        }
+
+        // Note, if parent is null, then assign child to parent,
+        // which will be null and so root turns null or another element
+        if(parent_ == null){
+            root = child_; 
+        }
+        // If "parent.left" is "current_entry", then assign left with child
+        else if (parent_.left == current_entry){
+            parent_.left = child_;
+        }
+        // Else, assign "parent.right" to "child_"
+        else{
+            parent_.right = child_;
+        }
+    }
     ////////////////////////////////////////////////////////////////////////////////
 
  
@@ -263,10 +357,9 @@ public class BinarySearchTree<T extends Comparable<? super T>> implements Iterab
         long operand = 0;
         int modValue = 999983;
         long result = 0;
-
+        
 
         // Initialize the timer
-        
         //Timer timer = new Timer();
 
         // Accoring to the file were using, we 
@@ -275,18 +368,14 @@ public class BinarySearchTree<T extends Comparable<? super T>> implements Iterab
                 case "Add": {
                     operand = sc.nextInt();
 
-                    System.out.println("ADDING");
                     if (bst.add(operand)) {
                         result = (result + 1) % modValue;
-                    }
-                    
+                    }                    
                     break;
                 }
                 case "Remove": {
-
-                    System.out.println("REMOVE");
                     operand = sc.nextInt();
-                    
+            
                     if (bst.remove(operand) != null) {
                         result = (result + 1) % modValue;
                     }
@@ -295,16 +384,18 @@ public class BinarySearchTree<T extends Comparable<? super T>> implements Iterab
                 }
                 case "Contains": {
                     operand = sc.nextInt();
-                    /*  
+                    
                     if (bst.contains(operand)) {
                         result = (result + 1) % modValue;
                     }
-                   */
+                   
                     break;
                 }
             }
         }
 
+        // Close sc when done
+        sc.close();
     
         // End Time
         //timer.end();
