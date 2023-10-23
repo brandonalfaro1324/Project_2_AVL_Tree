@@ -155,6 +155,11 @@ public class BinarySearchTree<T extends Comparable<? super T>> implements Iterab
                 add_success = true;
             }
         }
+
+        if(add_success == false){
+            avl_node = null;
+        }
+
         // Return result back to AVLTree
         return add_success;
     }
