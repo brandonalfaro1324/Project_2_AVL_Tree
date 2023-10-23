@@ -15,7 +15,6 @@ import java.util.Scanner;
 import java.util.Stack;
 
 
-
 // Understanding this Syntax
 // "BinarySearchTree<T extends Comparable<? super T>> implements Iterable<T>"
 
@@ -49,7 +48,7 @@ public class BinarySearchTree<T extends Comparable<? super T>> implements Iterab
         binary_stack = null;
     }
 
-
+    ////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////
     // "contains()" function checks if element exist in tree 
     public boolean contains(T x) {
@@ -70,6 +69,7 @@ public class BinarySearchTree<T extends Comparable<? super T>> implements Iterab
         return contains_sucess;
     }
 
+    ////////////////////////////////////////
     ////////////////////////////////////////
     // "add()" function adds elements
     public boolean add(T x) {
@@ -116,6 +116,8 @@ public class BinarySearchTree<T extends Comparable<? super T>> implements Iterab
         return add_success;
     }
     
+    ////////////////////////////////////////
+    ////////////////////////////////////////
     // This add function is only to be used by the AVLTree
     // We first get the AVLTree.Entry<T> from AVLTree and store
     // it to the BSTTree. Thats it!!!
@@ -157,13 +159,7 @@ public class BinarySearchTree<T extends Comparable<? super T>> implements Iterab
         return add_success;
     }
 
-
-
-
-
-
-
-
+    ////////////////////////////////////////
     ////////////////////////////////////////
     // "remove()" function that removes elements
     public T remove(T x){
@@ -219,7 +215,7 @@ public class BinarySearchTree<T extends Comparable<? super T>> implements Iterab
 
 
 
-    // Helper function for remove and add
+    ///// Helper function for remove and add/////
     //----------------------------------------------
     private Entry<T> set_find(T x){
 
@@ -328,7 +324,7 @@ public class BinarySearchTree<T extends Comparable<? super T>> implements Iterab
         }
     }
     ////////////////////////////////////////////////////////////////////////////////
-
+    ////////////////////////////////////////////////////////////////////////////////
  
 
     ////////////////////////////////////////////////////////////////////////////////
@@ -380,8 +376,7 @@ public class BinarySearchTree<T extends Comparable<? super T>> implements Iterab
     // End of Optional problems
      */
     ////////////////////////////////////////////////////////////////////////////////
-
-
+    ////////////////////////////////////////////////////////////////////////////////
     public static void main(String[] args) throws FileNotFoundException {
 
         // We create "BinarySearchTree" object
@@ -453,7 +448,6 @@ public class BinarySearchTree<T extends Comparable<? super T>> implements Iterab
         //System.out.println(timer);
     }
 
-
     public void printTree() {
         System.out.print("[" + size + "]");
         printTree(root);
@@ -469,7 +463,3 @@ public class BinarySearchTree<T extends Comparable<? super T>> implements Iterab
         }
     }
 }
-
-
-
-
