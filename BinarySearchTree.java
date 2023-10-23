@@ -3,18 +3,17 @@
  * Binary search tree (starter code)
  **/
 
-// replace package name with your netid
-package dsa;
+package bxa220020;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Scanner;
-import javax.swing.RowFilter.Entry;
 
 // Adding my own imports
 import java.util.Stack;
+
 
 
 // Understanding this Syntax
@@ -43,6 +42,7 @@ public class BinarySearchTree<T extends Comparable<? super T>> implements Iterab
     int size;
     Stack<Entry<T>> binary_stack;
 
+
     public BinarySearchTree() {
         root = null;
         size = 0;
@@ -67,14 +67,13 @@ public class BinarySearchTree<T extends Comparable<? super T>> implements Iterab
         }
     
         // Reset stack and return results
-        binary_stack = null;
         return contains_sucess;
     }
 
     ////////////////////////////////////////
     // "add()" function adds elements
     public boolean add(T x) {
-
+        
         // Set boolean var to return success of adding new node
         boolean add_success = false;
 
@@ -113,11 +112,58 @@ public class BinarySearchTree<T extends Comparable<? super T>> implements Iterab
                 add_success = true;
             }
         }
-        // Reset Stack and return success of adding node, true or false.
-        binary_stack = null;
+        // Reset Stack and return success of adding node, true or false.        
         return add_success;
     }
     
+    // This add function is only to be used by the AVLTree
+    // We first get the AVLTree.Entry<T> from AVLTree and store
+    // it to the BSTTree. Thats it!!!
+    public boolean add(Entry<T> avl_node) {
+
+        // Initialize if new node was added successfully
+        boolean add_success = false;
+
+        // If root is null add new node to root and increase size +1 and set "add_success" to true.
+        if (root == null){
+            root = avl_node;
+            size++;
+            add_success = true;
+        }
+        else{
+
+            // Find if (avl_node) exist in tree or find the lowest point where
+            //  we can place new node either left or right of parent. 
+            Entry<T> element_extracted = set_find(avl_node.element);
+
+            // If (avl_node) does not exist in tree, place 
+            // either left or right of parent node
+            if ((avl_node.element).compareTo(element_extracted.element) != 0){
+                
+                // Place left of parent
+                if ((avl_node.element).compareTo(element_extracted.element) < 0){
+                    element_extracted.left = avl_node;
+                }
+                // Place right of parent
+                else {
+                    element_extracted.right = avl_node;
+                }
+                // Increase size + 1
+                size++;
+                add_success = true;
+            }
+        }
+        // Return result back to AVLTree
+        return add_success;
+    }
+
+
+
+
+
+
+
+
     ////////////////////////////////////////
     // "remove()" function that removes elements
     public T remove(T x){
@@ -168,7 +214,6 @@ public class BinarySearchTree<T extends Comparable<? super T>> implements Iterab
             x = null;
         }
         // Reset stack and return x
-        binary_stack = null;
         return x;
     }
 
@@ -177,6 +222,10 @@ public class BinarySearchTree<T extends Comparable<? super T>> implements Iterab
     // Helper function for remove and add
     //----------------------------------------------
     private Entry<T> set_find(T x){
+
+        if(binary_stack != null){
+            binary_stack = null;
+        }
 
         // Intialize a new Stack and push null
         binary_stack = new Stack<>();
@@ -369,7 +418,7 @@ public class BinarySearchTree<T extends Comparable<? super T>> implements Iterab
                     operand = sc.nextInt();
 
                     if (bst.add(operand)) {
-                        result = (result + 1) % modValue;
+                       result = (result + 1) % modValue;
                     }                    
                     break;
                 }
