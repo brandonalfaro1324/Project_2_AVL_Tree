@@ -40,6 +40,9 @@ public class AVLTreeDriver {
 						if(VERIFY && !avlTree.verify()){
 							System.out.println("Invalid AVL tree ");
 						}
+						else{
+							System.out.println("Valid AVL tree ");
+						}
 					}
 					break;
 				}
