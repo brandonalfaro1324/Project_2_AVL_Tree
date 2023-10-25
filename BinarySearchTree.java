@@ -151,7 +151,14 @@ public class BinarySearchTree<T extends Comparable<? super T>> implements Iterab
                     if (binary_stack.peek() == null){
                         binary_stack.push(root);
                     }
-                    binary_stack.push(avl_node);
+
+                    if (root == element_extracted) {
+                        binary_stack.push(avl_node);
+                    }
+                    else{
+                        binary_stack.push(element_extracted);
+                        binary_stack.push(avl_node);
+                    }
 
                 }
                 // Place right of parent
@@ -162,7 +169,15 @@ public class BinarySearchTree<T extends Comparable<? super T>> implements Iterab
                     if (binary_stack.peek() == null){
                         binary_stack.push(root);
                     }
-                    binary_stack.push(avl_node);
+                    
+                    if (root == element_extracted) {
+                        binary_stack.push(avl_node);
+                    }
+                    else{
+                        binary_stack.push(element_extracted);
+                        binary_stack.push(avl_node);
+                    }
+
                 }
                 // Increase size + 1
                 size++;
