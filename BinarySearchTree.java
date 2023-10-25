@@ -133,7 +133,6 @@ public class BinarySearchTree<T extends Comparable<? super T>> implements Iterab
             add_success = true;
         }
         else{
-
             // Find if (avl_node) exist in tree or find the lowest point where
             //  we can place new node either left or right of parent. 
             Entry<T> element_extracted = set_find(avl_node.element);
@@ -145,21 +144,34 @@ public class BinarySearchTree<T extends Comparable<? super T>> implements Iterab
                 // Place left of parent
                 if ((avl_node.element).compareTo(element_extracted.element) < 0){
                     element_extracted.left = avl_node;
+
+                    // Since we're using stack to set and compute tree roation
+                    // For adding the second node, if stack.peek() is null,
+                    // push in root to stack then push in newly added node.
+                    if (binary_stack.peek() == null){
+                        binary_stack.push(root);
+                    }
+                    binary_stack.push(avl_node);
+
                 }
                 // Place right of parent
                 else {
                     element_extracted.right = avl_node;
+
+                    // Same for the top comment
+                    if (binary_stack.peek() == null){
+                        binary_stack.push(root);
+                    }
+                    binary_stack.push(avl_node);
                 }
                 // Increase size + 1
                 size++;
                 add_success = true;
             }
         }
-
         if(add_success == false){
             avl_node = null;
         }
-
         // Return result back to AVLTree
         return add_success;
     }
@@ -224,13 +236,15 @@ public class BinarySearchTree<T extends Comparable<? super T>> implements Iterab
     //----------------------------------------------
     private Entry<T> set_find(T x){
 
+        // If stack is not null, reset it
         if(binary_stack != null){
             binary_stack = null;
         }
 
         // Intialize a new Stack and push null
         binary_stack = new Stack<>();
-        binary_stack.add(null);
+        binary_stack.push(null);
+        //binary_stack.push(root);
 
         // Use x to traverse trough tree and assign it to "return_node"
         Entry<T> return_node = find(root, x);
@@ -271,7 +285,7 @@ public class BinarySearchTree<T extends Comparable<? super T>> implements Iterab
                 // If left is not null, add "current_entry"
                 // to stack and assign it to its own left child 
                 else{
-                    binary_stack.add(current_entry);
+                    binary_stack.push(current_entry);
                     current_entry = current_entry.left;
                 }
             }
@@ -287,7 +301,7 @@ public class BinarySearchTree<T extends Comparable<? super T>> implements Iterab
             // If not null assign "current_entry"
             //  to its own right child
             else{
-                binary_stack.add(current_entry);
+                binary_stack.push(current_entry);
                 current_entry = current_entry.right;
             }
         }
